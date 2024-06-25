@@ -1,0 +1,4 @@
+{
+    "recommendations": ["esbenp.prettier-vscode", "VisualStudioToolsForUnity.vstuc", "ms-dotnettools.csdevkit", "GitHub.vscode-github-actions", "GitHub.remotehub", "ms-vscode.vscode-github-issue-notebooks", "donjayamanne.githistory", "mhutchie.git-graph"],
+    "unwantedRecommendations": []
+}
