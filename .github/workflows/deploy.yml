@@ -43,24 +43,21 @@ jobs:
     steps:
       - name: Check Trigger Event
         id: check_trigger_event
-        env:
-          TRIGGER_MESSAGE_FILE: $GITHUB_WORKSPACE/trigger_message.env
         run: |
           echo "GITHUB_WORKSPACE is $GITHUB_WORKSPACE"  # Debugging: Print GITHUB_WORKSPACE
-          
-          # Ensure directory exists and create file
+
+          # Ensure the GITHUB_WORKSPACE directory exists
           mkdir -p $GITHUB_WORKSPACE
-          touch $TRIGGER_MESSAGE_FILE
-          
-          echo "Creating trigger message file..."
+
+          # Write trigger message based on event type
           if [[ "${{ github.event_name }}" == "workflow_dispatch" ]]; then
-            echo "TRIGGER_MESSAGE=\"This workflow was triggered manually by ${{ github.actor }}.\"" > $TRIGGER_MESSAGE_FILE
+            echo "TRIGGER_MESSAGE=\"This workflow was triggered manually by ${{ github.actor }}.\"" > $GITHUB_WORKSPACE/trigger_message.env
           else
-            echo "TRIGGER_MESSAGE=\"This workflow was triggered by ${{ github.event_name }}.\"" > $TRIGGER_MESSAGE_FILE
+            echo "TRIGGER_MESSAGE=\"This workflow was triggered by ${{ github.event_name }}.\"" > $GITHUB_WORKSPACE/trigger_message.env
           fi
 
-          echo "Contents of $TRIGGER_MESSAGE_FILE:"
-          cat $TRIGGER_MESSAGE_FILE  # Debugging: Print contents of the created file
+          echo "Contents of $GITHUB_WORKSPACE/trigger_message.env:"
+          cat $GITHUB_WORKSPACE/trigger_message.env  # Debugging: Print contents of the created file
 
   print-trigger-message:
     needs: [check-trigger]
@@ -70,8 +67,7 @@ jobs:
         env:
           TRIGGER_MESSAGE_FILE: $GITHUB_WORKSPACE/trigger_message.env
         run: |
-          echo "Sourcing $TRIGGER_MESSAGE_FILE..."
-          source $TRIGGER_MESSAGE_FILE
+          source $TRIGGER_MESSAGE_FILE || true  # Use '|| true' to suppress error if file not found
           echo "$TRIGGER_MESSAGE"
 
   deploy:
