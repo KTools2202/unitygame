@@ -469,3 +469,6 @@ FodyWeavers.xsd
 
 # JetBrains Rider
 *.sln.iml
+
+# necessary vscode folder ignores
+.vscode/extensions.json
