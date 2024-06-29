@@ -20,12 +20,15 @@ jobs:
           script: |
             const triggerUser = '${{ github.actor }}';
             
-            // Use the github object directly for actions
-            const response = await github.actions.createWorkflowDispatch({
+            const github = require('@actions/github');
+            const octokit = new github.GitHub(process.env.GITHUB_TOKEN);
+            const context = github.context;
+
+            const response = await octokit.actions.createWorkflowDispatch({
               owner: context.repo.owner,
               repo: context.repo.repo,
-              workflow_id: 'deploy.yml',  // Ensure this matches your deploy workflow filename
-              ref: 'website',  // The branch you want to trigger the workflow on
+              workflow_id: 'deploy.yml',
+              ref: 'website',
               inputs: {
                 triggerUser: triggerUser,
               },
