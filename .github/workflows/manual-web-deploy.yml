@@ -16,7 +16,7 @@ jobs:
       - name: Set up Node.js
         uses: actions/setup-node@v2
         with:
-          node-version: '14'  # Ensure Node.js version matches your requirements
+          node-version: '14'
 
       - name: Install dependencies
         run: npm install @actions/github
@@ -29,9 +29,8 @@ jobs:
             try {
               const triggerUser = '${{ github.actor }}';
 
-              const github = require('@actions/github');
-              const octokit = new github.GitHub(process.env.GITHUB_TOKEN); // Initialize octokit client
-              const context = github.context;
+              const { Octokit } = require('@octokit/rest'); // Correct import
+              const octokit = new Octokit({ auth: process.env.GITHUB_TOKEN }); // Initialize Octokit client
 
               const response = await octokit.actions.createWorkflowDispatch({
                 owner: context.repo.owner,
@@ -46,5 +45,5 @@ jobs:
               console.log(response);
             } catch (error) {
               console.error('Error:', error);
-              throw error; // Rethrow the error to ensure it's propagated correctly
+              throw error;
             }
