@@ -13,29 +13,36 @@ jobs:
   trigger-deploy:
     runs-on: ubuntu-latest
     steps:
+      - name: Set up Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: '14'  # Ensure Node.js version matches your requirements
+
+      - name: Install dependencies
+        run: npm install @actions/github
+
       - name: Call Deploy Workflow
         uses: actions/github-script@v6
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           script: |
-            try {
-              const triggerUser = '${{ github.actor }}';
-              
-              const github = require('@actions/github');
-              const octokit = new github.GitHub(process.env.GITHUB_TOKEN); // Initialize octokit client
-              const context = github.context;
+            const triggerUser = '${{ github.actor }}';
+            
+            const github = require('@actions/github');
+            const octokit = new github.GitHub(process.env.GITHUB_TOKEN); // Initialize octokit client
+            const context = github.context;
 
-              const response = await octokit.actions.createWorkflowDispatch({
-                owner: context.repo.owner,
-                repo: context.repo.repo,
-                workflow_id: 'deploy.yml',  // Ensure this matches your deploy workflow filename
-                ref: 'website',  // The branch you want to trigger the workflow on
-                inputs: {
-                  triggerUser: triggerUser,
-                },
-              });
-              
-              console.log(response);
+            const response = await octokit.actions.createWorkflowDispatch({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              workflow_id: 'deploy.yml',  // Ensure this matches your deploy workflow filename
+              ref: 'website',  // The branch you want to trigger the workflow on
+              inputs: {
+                triggerUser: triggerUser,
+              },
+            });
+            
+            console.log(response);
             } catch (error) {
               console.error('Error:', error);
               throw error; // Rethrow the error to ensure it's propagated correctly
