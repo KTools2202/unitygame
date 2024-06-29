@@ -1,6 +1,5 @@
+# Manual website deployment workflow
 name: Manual website deployment
-
-run-name: Trigger website deployment to GitHub Pages
 
 on:
   workflow_dispatch:
@@ -13,39 +12,17 @@ jobs:
   trigger-deploy:
     runs-on: ubuntu-latest
     steps:
-      - name: Set up Node.js
-        uses: actions/setup-node@v2
-        with:
-          node-version: '14'
-
-      - name: Install @octokit/rest
-        run: npm install @octokit/rest
-
-      - name: Call Deploy Workflow
-        uses: actions/github-script@v6
-        with:
-          github-token: ${{ secrets.GITHUB_TOKEN }}
-          script: |
-            try {
-              const triggerUser = '${{ github.actor }}';
-
-              const { Octokit } = await import('@octokit/rest');
-
-              const octokit = new Octokit({ auth: process.env.GITHUB_TOKEN });
-
-              const response = await octokit.actions.createWorkflowDispatch({
-                owner: context.repo.owner,
-                repo: context.repo.repo,
-                workflow_id: 'deploy.yml',
-                ref: 'website',
-                inputs: {
-                  triggerUser: triggerUser,
-                },
-              });
-
-              console.log(response);
-            } catch (error) {
-              console.error('Error:', error);
-              throw error;
-            }
-
+      - name: Trigger Deploy Workflow
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          curl -X POST \
+            -H "Accept: application/vnd.github.v3+json" \
+            -H "Authorization: token $GITHUB_TOKEN" \
+            https://api.github.com/repos/${{ github.repository }}/actions/workflows/deploy.yml/dispatches \
+            -d '{
+                  "ref": "website",
+                  "inputs": {
+                    "triggerUser": "${{ github.actor }}"
+                  }
+                }'
