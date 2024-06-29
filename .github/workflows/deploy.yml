@@ -31,6 +31,25 @@ concurrency:
 
 jobs:
   # Single deploy job since we're just deploying
+  check-trigger:
+    runs-on: ubuntu-latest
+    outputs:
+      trigger_message: ${{ steps.check_trigger_event.outputs.trigger_message }}
+    steps:
+      - name: Check Trigger Event
+        id: check_trigger_event
+        run: |
+          if [[ "${{ github.event_name }}" == "workflow_dispatch" ]]; then
+            echo "::set-output name=trigger_message::This workflow was triggered manually. Check the Manual Wiki Sync workflow in the Actions tab to see who triggered it."
+          else
+            echo "::set-output name=trigger_message::This workflow was triggered by ${{ github.event_name }}."
+          fi
+  print-trigger-message:
+    needs: [check-trigger]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Print Trigger Message
+        run: echo "${{ needs.check-trigger.outputs.trigger_message }}"
   deploy:
     environment:
       name: github-pages
