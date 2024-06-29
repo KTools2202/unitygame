@@ -12,13 +12,14 @@ jobs:
       - name: Call Deploy Workflow
         uses: actions/github-script@v6
         with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
           script: |
             const triggerUser = '${{ github.actor }}';
             await github.actions.createWorkflowDispatch({
               owner: context.repo.owner,
               repo: context.repo.repo,
-              workflow_id: 'deploy.yml',  # Ensure this matches your deploy workflow filename
-              ref: 'website',  # The branch you want to trigger the workflow on
+              workflow_id: 'deploy.yml',  // Ensure this matches your deploy workflow filename
+              ref: 'website',  // The branch you want to trigger the workflow on
               inputs: {
                 triggerUser: triggerUser,
               },
