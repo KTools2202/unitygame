@@ -1,6 +1,6 @@
-name: Build & test the Unity project
+name: test triggering workflow
 
-run-name: Build the game!
+run-name: test deploy
 
 on:
   workflow_dispatch:
