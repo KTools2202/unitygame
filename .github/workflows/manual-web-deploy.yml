@@ -3,10 +3,6 @@ name: Manual website deployment
 
 on:
   workflow_dispatch:
-    inputs:
-      triggerUser:
-        description: 'User who triggered the deployment'
-        required: true
 
 permissions:
   actions: write
