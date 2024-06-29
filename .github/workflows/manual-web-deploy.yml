@@ -5,6 +5,10 @@ run-name: Trigger website deployment to GitHub Pages
 on:
   workflow_dispatch:
 
+permissions:
+  actions: write
+  contents: write
+
 jobs:
   trigger-deploy:
     runs-on: ubuntu-latest
