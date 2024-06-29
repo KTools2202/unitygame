@@ -47,6 +47,11 @@ jobs:
           TRIGGER_MESSAGE_FILE: $GITHUB_WORKSPACE/trigger_message.env
         run: |
           echo "GITHUB_WORKSPACE is $GITHUB_WORKSPACE"  # Debugging: Print GITHUB_WORKSPACE
+          
+          # Ensure directory exists and create file
+          mkdir -p $GITHUB_WORKSPACE
+          touch $TRIGGER_MESSAGE_FILE
+          
           echo "Creating trigger message file..."
           if [[ "${{ github.event_name }}" == "workflow_dispatch" ]]; then
             echo "TRIGGER_MESSAGE=\"This workflow was triggered manually by ${{ github.actor }}.\"" > $TRIGGER_MESSAGE_FILE
