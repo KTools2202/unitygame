@@ -40,35 +40,56 @@ jobs:
           - editmode
           - standalone
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout Repository
+        uses: actions/checkout@v4
         with:
           lfs: true
-      - uses: actions/cache@v3
+
+      - name: Cache Library Folder
+        uses: actions/cache@v3
         with:
           path: ${{ matrix.projectPath }}/Library
           key: Library-${{ matrix.projectPath }}
           restore-keys: |
             Library-
-      - uses: game-ci/unity-test-runner@v4
+
+      - name: Debug Project Directory
+        run: |
+          echo "Current directory: $(pwd)"
+          echo "Contents of project path:"
+          ls ${{ matrix.projectPath }}
+
+      - name: Run Unity Tests
+        uses: game-ci/unity-test-runner@v4
         id: tests
         env:
           UNITY_LICENSE: ${{ secrets.UNITY_LICENSE }}
           UNITY_EMAIL: ${{ secrets.UNITY_EMAIL }}
           UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD }}
         with:
-          projectPath: '../Assets'
+          projectPath: ${{ matrix.projectPath }}
           testMode: ${{ matrix.testMode }}
           artifactsPath: ${{ matrix.testMode }}-artifacts
           githubToken: ${{ secrets.GITHUB_TOKEN }}
           checkName: ${{ matrix.testMode }} Test Results
           coverageOptions: 'generateAdditionalMetrics;generateHtmlReport;generateBadgeReport;assemblyFilters:+my.assembly.*'
-      - uses: actions/upload-artifact@v3
+
+      - name: Upload Test Results
+        uses: actions/upload-artifact@v3
         if: always()
         with:
           name: Test results for ${{ matrix.testMode }}
-          path: ${{ steps.tests.outputs.artifactsPath }}
-      - uses: actions/upload-artifact@v3
+          path: ${{ matrix.testMode }}-artifacts
+
+      - name: Upload Coverage Results
+        uses: actions/upload-artifact@v3
         if: always()
         with:
           name: Coverage results for ${{ matrix.testMode }}
           path: ${{ steps.tests.outputs.coveragePath }}
+
+      - name: Debug Step Outputs
+        if: always()
+        run: |
+          echo "Artifacts Path: ${{ matrix.testMode }}-artifacts"
+          echo "Coverage Path: ${{ steps.tests.outputs.coveragePath }}"
