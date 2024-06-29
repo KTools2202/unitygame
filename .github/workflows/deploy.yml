@@ -4,3 +4,9 @@ on:
   workflow_dispatch:
 
 # DO NOT PUT ANYTHING HERE, THIS SIMPLY ENABLES ACCESS TO THE DEPLOY YML AT THE WEBSITE BRANCH
+jobs:
+  remind:
+    runs-on: unbuntu-latest
+    steps:
+    - name: Wrong workflow!
+      run: "echo 'This is the wrong workflow to be running! Make sure you select the website branch!'"
