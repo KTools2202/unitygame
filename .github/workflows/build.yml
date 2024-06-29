@@ -4,21 +4,21 @@ run-name: Build the game!
 
 on:
   push:
-    branches: [ main ]
-    paths: 
-      - '!.github/**'
-      - '!README.md'
-      - '!.gitattributes'
-      - '!.gitignore'
-      - '!.vscode/**'
+    branches: ["main"]
+    paths-ignore: 
+      - '.github/**'
+      - 'README.md'
+      - '.gitattributes'
+      - '.gitignore'
+      - '.vscode/**'
   pull_request:
-    branches: [ main ]
+    branches: ["main"]
     paths:
-      - '!.github/**'
-      - '!README.md'
-      - '!.gitattributes'
-      - '!.gitignore'
-      - '!.vscode/**'
+      - '.github/**'
+      - 'README.md'
+      - '.gitattributes'
+      - '.gitignore'
+      - '.vscode/**'
   workflow_dispatch:
 
 permissions:
