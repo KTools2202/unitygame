@@ -1,4 +1,4 @@
 {
-    "recommendations": ["esbenp.prettier-vscode", "VisualStudioToolsForUnity.vstuc", "ms-dotnettools.csdevkit", "GitHub.vscode-github-actions", "GitHub.remotehub", "ms-vscode.vscode-github-issue-notebooks", "donjayamanne.githistory", "mhutchie.git-graph"],
+    "recommendations": ["esbenp.prettier-vscode", "formulahendry.code-runner", "ritwickdey.liveserver", "GitHub.vscode-github-actions", "GitHub.remotehub", "ms-vscode.vscode-github-issue-notebooks", "donjayamanne.githistory", "mhutchie.git-graph", "mohd-akram.vscode-html-format", "aeschli.vscode-css-formatter", "pranaygp.vscode-css-peek", "aeschli.vscode-css-formatter", "clinyong.vscode-css-modules", "wscats.html-snippets", "george-alisson.html-preview-vscode"],
     "unwantedRecommendations": []
 }
