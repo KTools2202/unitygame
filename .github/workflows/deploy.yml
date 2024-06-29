@@ -45,9 +45,9 @@ jobs:
         id: check_trigger_event
         run: |
           if [[ "${{ github.event_name }}" == "workflow_dispatch" ]]; then
-            echo "TRIGGER_MESSAGE=\"This workflow was triggered manually by ${{ github.actor }}.\"" > trigger_message.env
+            echo "TRIGGER_MESSAGE=\"This workflow was triggered manually by ${{ github.actor }}.\"" > $GITHUB_WORKSPACE/trigger_message.env
           else
-            echo "TRIGGER_MESSAGE=\"This workflow was triggered by ${{ github.event_name }}.\"" > trigger_message.env
+            echo "TRIGGER_MESSAGE=\"This workflow was triggered by ${{ github.event_name }}.\"" > $GITHUB_WORKSPACE/trigger_message.env
           fi
 
   print-trigger-message:
@@ -56,7 +56,7 @@ jobs:
     steps:
       - name: Print Trigger Message
         env:
-          TRIGGER_MESSAGE_FILE: ./trigger_message.env
+          TRIGGER_MESSAGE_FILE: $GITHUB_WORKSPACE/trigger_message.env
         run: |
           source $TRIGGER_MESSAGE_FILE
           echo "$TRIGGER_MESSAGE"
