@@ -29,7 +29,6 @@ jobs:
             try {
               const triggerUser = '${{ github.actor }}';
 
-              // Use dynamic import for ES module
               const { Octokit } = await import('@octokit/rest');
 
               const octokit = new Octokit({ auth: process.env.GITHUB_TOKEN });
@@ -49,3 +48,4 @@ jobs:
               console.error('Error:', error);
               throw error;
             }
+
