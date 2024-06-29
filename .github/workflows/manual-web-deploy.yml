@@ -18,20 +18,25 @@ jobs:
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           script: |
-            const triggerUser = '${{ github.actor }}';
-            
-            const github = require('@actions/github');
-            const octokit = new github.GitHub(process.env.GITHUB_TOKEN); // Initialize octokit client
-            const context = github.context;
+            try {
+              const triggerUser = '${{ github.actor }}';
+              
+              const github = require('@actions/github');
+              const octokit = new github.GitHub(process.env.GITHUB_TOKEN); // Initialize octokit client
+              const context = github.context;
 
-            const response = await octokit.actions.createWorkflowDispatch({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              workflow_id: 'deploy.yml',  // Ensure this matches your deploy workflow filename
-              ref: 'website',  // The branch you want to trigger the workflow on
-              inputs: {
-                triggerUser: triggerUser,
-              },
-            });
-            
-            console.log(response);
+              const response = await octokit.actions.createWorkflowDispatch({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                workflow_id: 'deploy.yml',  // Ensure this matches your deploy workflow filename
+                ref: 'website',  // The branch you want to trigger the workflow on
+                inputs: {
+                  triggerUser: triggerUser,
+                },
+              });
+              
+              console.log(response);
+            } catch (error) {
+              console.error('Error:', error);
+              throw error; // Rethrow the error to ensure it's propagated correctly
+            }
