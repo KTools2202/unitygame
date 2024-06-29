@@ -13,6 +13,7 @@ on:
       - '.gitattributes'
       - '.gitignore'
       - '.vscode/**'
+      - 'LICENSE'
 
   # Allows you to run this workflow manually from the Actions tab or via another workflow
   workflow_dispatch:
@@ -39,16 +40,14 @@ concurrency:
 jobs:
   check-trigger:
     runs-on: ubuntu-latest
-    outputs:
-      trigger_message: ${{ steps.check_trigger_event.outputs.trigger_message }}
     steps:
       - name: Check Trigger Event
         id: check_trigger_event
         run: |
           if [[ "${{ github.event_name }}" == "workflow_dispatch" ]]; then
-            echo "::set-output name=trigger_message::This workflow was triggered manually by ${{ github.actor }}."
+            echo "TRIGGER_MESSAGE=\"This workflow was triggered manually by ${{ github.actor }}.\"" > trigger_message.env
           else
-            echo "::set-output name=trigger_message::This workflow was triggered by ${{ github.event_name }}."
+            echo "TRIGGER_MESSAGE=\"This workflow was triggered by ${{ github.event_name }}.\"" > trigger_message.env
           fi
 
   print-trigger-message:
@@ -56,7 +55,11 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Print Trigger Message
-        run: echo "${{ needs.check-trigger.outputs.trigger_message }}"
+        env:
+          TRIGGER_MESSAGE_FILE: ./trigger_message.env
+        run: |
+          source $TRIGGER_MESSAGE_FILE
+          echo "$TRIGGER_MESSAGE"
 
   deploy:
     needs: [print-trigger-message]
