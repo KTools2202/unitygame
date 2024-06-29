@@ -5,9 +5,6 @@ run-name: Trigger website deployment to GitHub Pages
 on:
   workflow_dispatch:
 
-permissions:
-  actions: write
-
 jobs:
   trigger-deploy:
     runs-on: ubuntu-latest
@@ -18,12 +15,9 @@ jobs:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           script: |
             const triggerUser = '${{ github.actor }}';
-            const github = require('@actions/github');
-
-            const context = github.context;
-            const octokit = new github.GitHub(process.env.GITHUB_TOKEN);
-
-            const response = await octokit.actions.createWorkflowDispatch({
+            
+            // Use the github object directly for actions
+            const response = await github.actions.createWorkflowDispatch({
               owner: context.repo.owner,
               repo: context.repo.repo,
               workflow_id: 'deploy.yml',  // Ensure this matches your deploy workflow filename
@@ -32,5 +26,5 @@ jobs:
                 triggerUser: triggerUser,
               },
             });
-
+            
             console.log(response);
