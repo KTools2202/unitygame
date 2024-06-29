@@ -44,11 +44,16 @@ jobs:
       - name: Check Trigger Event
         id: check_trigger_event
         run: |
+          echo "GITHUB_WORKSPACE is $GITHUB_WORKSPACE"  # Debugging: Print GITHUB_WORKSPACE
+          echo "Creating trigger message file..."
           if [[ "${{ github.event_name }}" == "workflow_dispatch" ]]; then
             echo "TRIGGER_MESSAGE=\"This workflow was triggered manually by ${{ github.actor }}.\"" > $GITHUB_WORKSPACE/trigger_message.env
           else
             echo "TRIGGER_MESSAGE=\"This workflow was triggered by ${{ github.event_name }}.\"" > $GITHUB_WORKSPACE/trigger_message.env
           fi
+
+          echo "Contents of $TRIGGER_MESSAGE_FILE:"
+          cat $TRIGGER_MESSAGE_FILE  # Debugging: Print contents of the created file
 
   print-trigger-message:
     needs: [check-trigger]
@@ -58,6 +63,7 @@ jobs:
         env:
           TRIGGER_MESSAGE_FILE: $GITHUB_WORKSPACE/trigger_message.env
         run: |
+          echo "Sourcing $TRIGGER_MESSAGE_FILE..."
           source $TRIGGER_MESSAGE_FILE
           echo "$TRIGGER_MESSAGE"
 
