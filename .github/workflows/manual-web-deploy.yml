@@ -18,8 +18,8 @@ jobs:
         with:
           node-version: '14'
 
-      - name: Install dependencies
-        run: npm install @actions/github
+      - name: Install @octokit/rest
+        run: npm install @octokit/rest
 
       - name: Call Deploy Workflow
         uses: actions/github-script@v6
@@ -29,14 +29,15 @@ jobs:
             try {
               const triggerUser = '${{ github.actor }}';
 
-              const { Octokit } = require('@octokit/rest'); // Correct import
-              const octokit = new Octokit({ auth: process.env.GITHUB_TOKEN }); // Initialize Octokit client
+              const { Octokit } = await import('@octokit/rest');
+
+              const octokit = new Octokit({ auth: process.env.GITHUB_TOKEN });
 
               const response = await octokit.actions.createWorkflowDispatch({
                 owner: context.repo.owner,
                 repo: context.repo.repo,
-                workflow_id: 'deploy.yml',  // Ensure this matches your deploy workflow filename
-                ref: 'website',  // The branch you want to trigger the workflow on
+                workflow_id: 'deploy.yml',
+                ref: 'website',
                 inputs: {
                   triggerUser: triggerUser,
                 },
@@ -47,3 +48,4 @@ jobs:
               console.error('Error:', error);
               throw error;
             }
+
