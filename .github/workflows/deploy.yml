@@ -40,7 +40,7 @@ jobs:
         id: check_trigger_event
         run: |
           if [[ "${{ github.event_name }}" == "workflow_dispatch" ]]; then
-            echo "::set-output name=trigger_message::This workflow was triggered manually. Check the Manual Wiki Sync workflow in the Actions tab to see who triggered it."
+            echo "::set-output name=trigger_message::This workflow was triggered manually. Check the Manual website deployment workflow in the Actions tab to see who triggered it."
           else
             echo "::set-output name=trigger_message::This workflow was triggered by ${{ github.event_name }}."
           fi
