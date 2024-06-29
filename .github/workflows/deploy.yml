@@ -1,0 +1,6 @@
+name: Deploy static content to Pages
+
+on:
+  workflow_dispatch:
+
+# DO NOT PUT ANYTHING HERE, THIS SIMPLY ENABLES ACCESS TO THE DEPLOY YML AT THE WEBSITE BRANCH
