@@ -11,6 +11,7 @@ on:
       - '.gitattributes'
       - '.gitignore'
       - '.vscode/**'
+      - 'packages.json'
   pull_request:
     branches: ["main"]
     paths-ignore:
@@ -19,6 +20,7 @@ on:
       - '.gitattributes'
       - '.gitignore'
       - '.vscode/**'
+      - 'packages.json'
   workflow_dispatch:
 
 permissions:
