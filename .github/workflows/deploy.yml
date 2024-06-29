@@ -43,13 +43,15 @@ jobs:
     steps:
       - name: Check Trigger Event
         id: check_trigger_event
+        env:
+          TRIGGER_MESSAGE_FILE: $GITHUB_WORKSPACE/trigger_message.env
         run: |
           echo "GITHUB_WORKSPACE is $GITHUB_WORKSPACE"  # Debugging: Print GITHUB_WORKSPACE
           echo "Creating trigger message file..."
           if [[ "${{ github.event_name }}" == "workflow_dispatch" ]]; then
-            echo "TRIGGER_MESSAGE=\"This workflow was triggered manually by ${{ github.actor }}.\"" > $GITHUB_WORKSPACE/trigger_message.env
+            echo "TRIGGER_MESSAGE=\"This workflow was triggered manually by ${{ github.actor }}.\"" > $TRIGGER_MESSAGE_FILE
           else
-            echo "TRIGGER_MESSAGE=\"This workflow was triggered by ${{ github.event_name }}.\"" > $GITHUB_WORKSPACE/trigger_message.env
+            echo "TRIGGER_MESSAGE=\"This workflow was triggered by ${{ github.event_name }}.\"" > $TRIGGER_MESSAGE_FILE
           fi
 
           echo "Contents of $TRIGGER_MESSAGE_FILE:"
