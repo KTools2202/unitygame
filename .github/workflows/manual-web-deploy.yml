@@ -3,6 +3,10 @@ name: Manual website deployment
 
 on:
   workflow_dispatch:
+    inputs:
+      triggerUser:
+        description: 'User who triggered the deployment'
+        required: true
 
 permissions:
   actions: write
@@ -18,8 +22,8 @@ jobs:
           TRIGGER_USER: ${{ github.actor }}
         run: |
           # Construct payload for the workflow dispatch event
-          payload='{"ref":"website","inputs":{"triggerUser":"'"${TRIGGER_USER}"'"}}'
-          
+          payload="{\"ref\":\"website\",\"inputs\":{\"triggerUser\":\"${TRIGGER_USER}\"}}"
+
           # Trigger the deploy workflow using GitHub API
           curl -X POST \
             -H "Accept: application/vnd.github.v3+json" \
