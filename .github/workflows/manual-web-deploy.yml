@@ -4,15 +4,15 @@ on:
   workflow_dispatch:
 
 permissions:
-  actions: write
-  contents: write
+      actions: write
+      contents: write
 
 jobs:
   trigger-deploy:
     runs-on: ubuntu-latest
     steps:
       - name: Set up Node.js
-        uses: actions/setup-node@v2
+        uses: actions/setup-node@v4.0.2
         with:
           node-version: '14'
 
@@ -23,13 +23,9 @@ jobs:
           script: |
             try {
               const triggerUser = '${{ github.actor }}';
-
-              // Import Octokit from @octokit/rest
               const { Octokit } = require('@octokit/rest');
-
               const octokit = new Octokit({ auth: process.env.GITHUB_TOKEN });
 
-              // Use await inside an async function
               const response = await octokit.actions.createWorkflowDispatch({
                 owner: context.repo.owner,
                 repo: context.repo.repo,
@@ -41,6 +37,11 @@ jobs:
               });
 
               console.log(response.data);
+            } catch (error) {
+              console.error('Error:', error);
+              throw error;
+            }
+
             } catch (error) {
               console.error('Error:', error);
               throw error;
