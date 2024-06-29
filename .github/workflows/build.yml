@@ -74,6 +74,11 @@ jobs:
           checkName: ${{ matrix.testMode }} Test Results
           coverageOptions: 'generateAdditionalMetrics;generateHtmlReport;generateBadgeReport;assemblyFilters:+my.assembly.*'
 
+      - name: List Workspace Contents
+        run: |
+          echo "Listing workspace contents..."
+          ls -R
+
       - name: Upload Test Results
         uses: actions/upload-artifact@v3
         if: always()
