@@ -3,70 +3,31 @@ name: Build & test the Unity project
 run-name: Build the game!
 
 on:
-  push:
-    branches: [ main ]
-    paths: 
-      - '!.github/**'
-      - '!README.md'
-      - '!.gitattributes'
-      - '!.gitignore'
-      - '!.vscode/**'
-  pull_request:
-    branches: [ main ]
-    paths:
-      - '!.github/**'
-      - '!README.md'
-      - '!.gitattributes'
-      - '!.gitignore'
-      - '!.vscode/**'
   workflow_dispatch:
 
 permissions:
   actions: write
+  contents: write
 
 jobs:
-  test:
-    name: Test in ${{ matrix.testMode }}
+  trigger-deploy:
     runs-on: ubuntu-latest
-    strategy:
-      fail-fast: false
-      matrix:
-        projectPath:
-          - test-project
-        testMode:
-          - playmode
-          - editmode
-          - standalone
     steps:
-      - uses: actions/checkout@v4
-        with:
-          lfs: true
-      - uses: actions/cache@v3
-        with:
-          path: ${{ matrix.projectPath }}/Library
-          key: Library-${{ matrix.projectPath }}
-          restore-keys: |
-            Library-
-      - uses: game-ci/unity-test-runner@v4
-        id: tests
+      - name: Trigger Deploy Workflow
         env:
-          UNITY_LICENSE: ${{ secrets.UNITY_LICENSE }}
-          UNITY_EMAIL: ${{ secrets.UNITY_EMAIL }}
-          UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD }}
-        with:
-          projectPath: ${{ matrix.projectPath }}
-          testMode: ${{ matrix.testMode }}
-          artifactsPath: ${{ matrix.testMode }}-artifacts
-          githubToken: ${{ secrets.GITHUB_TOKEN }}
-          checkName: ${{ matrix.testMode }} Test Results
-          coverageOptions: 'generateAdditionalMetrics;generateHtmlReport;generateBadgeReport;assemblyFilters:+my.assembly.*'
-      - uses: actions/upload-artifact@v3
-        if: always()
-        with:
-          name: Test results for ${{ matrix.testMode }}
-          path: ${{ steps.tests.outputs.artifactsPath }}
-      - uses: actions/upload-artifact@v3
-        if: always()
-        with:
-          name: Coverage results for ${{ matrix.testMode }}
-          path: ${{ steps.tests.outputs.coveragePath }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          payload='{
+            "ref": "website",
+            "inputs": {
+              "triggerUser": "${{ github.actor }}"
+            }
+          }'
+          echo "$payload" > payload.json
+          
+          curl -X POST \
+            -H "Accept: application/vnd.github.v3+json" \
+            -H "Authorization: token $GITHUB_TOKEN" \
+            -H "Content-Type: application/json" \
+            --data @payload.json \
+            https://api.github.com/repos/${{ github.repository }}/actions/workflows/deploy.yml/dispatches
