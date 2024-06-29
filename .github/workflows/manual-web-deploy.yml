@@ -3,6 +3,9 @@ name: Manual website deployment
 on:
   workflow_dispatch:
 
+permissions:
+  actions: write
+
 jobs:
   trigger-deploy:
     runs-on: ubuntu-latest
@@ -10,7 +13,8 @@ jobs:
       - name: Trigger Deploy Workflow
         uses: peter-evans/workflow-dispatch@v1
         with:
-          workflow: 'deploy.yml'  # Replace with the name of the workflow file you want to trigger
-          ref: 'website'  # Replace with the branch or ref of the workflow file
+          workflow: deploy.yml  # Replace with your actual workflow ID
+          ref: website  # Replace with your target branch or ref
+          token: ${{ secrets.GITHUB_TOKEN }}
           inputs: |
-            triggerUser: ${{ github.actor }}
+            triggerUser=${{ github.actor }}
