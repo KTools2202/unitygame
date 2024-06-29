@@ -15,10 +15,9 @@ jobs:
       - name: Trigger Deploy Workflow
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          TRIGGER_USER: ${{ github.actor }}
         run: |
           # Construct payload for the workflow dispatch event
-          payload="{\"ref\":\"website\",\"inputs\":{\"triggerUser\":\"${TRIGGER_USER}\"}}"
+          payload="{\"ref\":\"website\",\"inputs\":{\"triggerUser\":\"${{ github.actor }}\"}}"
 
           # Trigger the deploy workflow using GitHub API
           curl -X POST \
@@ -26,3 +25,4 @@ jobs:
             -H "Authorization: token $GITHUB_TOKEN" \
             https://api.github.com/repos/${{ github.repository }}/actions/workflows/deploy.yml/dispatches \
             -d "$payload"
+            
