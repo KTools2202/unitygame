@@ -1,0 +1,12 @@
+{
+    "name": "game-website",
+    "version": "1.0.0",
+    "description": "A game website with a blog-like section for changelogs.",
+    "main": "index.js",
+    "scripts": {
+      "start": "echo 'No start script defined' && exit 1"
+    },
+    "author": "Your Name",
+    "license": "ISC"
+  }
+  
