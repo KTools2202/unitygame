@@ -17,12 +17,18 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           # Construct payload for the workflow dispatch event
-          payload="{\"ref\":\"website\",\"inputs\":{\"triggerUser\":\"${{ github.actor }}\"}}"
+          payload='{
+            "ref": "website",
+            "inputs": {
+              "triggerUser": "KTools2202"
+              }
+            }'
 
-          # Trigger the deploy workflow using GitHub API
           curl -X POST \
             -H "Accept: application/vnd.github.v3+json" \
             -H "Authorization: token $GITHUB_TOKEN" \
-            https://api.github.com/repos/${{ github.repository }}/actions/workflows/deploy.yml/dispatches \
+            -H "Content-Type: application/json" \
+            https://api.github.com/repos/KTools2202/unitygame/actions/workflows/deploy.yml/dispatches \
             -d "$payload"
+
             
