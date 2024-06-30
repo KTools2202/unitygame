@@ -115,7 +115,7 @@ jobs:
           lfs: true
 
       - name: Cache Library Folder
-        uses: actions/cache@v3
+        uses: actions/cache@v4
         with:
           path: ./dist/Library
           key: Library-MyProjectName-TargetPlatform
