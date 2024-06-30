@@ -25,7 +25,6 @@ on:
 
 permissions:
   actions: write
-  contents: write
 
 jobs:
   test:
@@ -132,5 +131,5 @@ jobs:
 
       - name: Debug Build Directory
         run: |
-          echo "Build Path: dist"
-          ls dist || echo "No build artifacts found"
+          echo "Build Path: ${{ matrix.projectPath }}"
+          ls ${{ matrix.projectPath }} || echo "No build artifacts found"
