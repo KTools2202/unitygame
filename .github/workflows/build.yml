@@ -75,10 +75,11 @@ jobs:
           checkName: ${{ matrix.testMode }} Test Results
           coverageOptions: 'generateAdditionalMetrics;generateHtmlReport;generateBadgeReport;assemblyFilters:+my.assembly.*'
 
-      - name: List Workspace Contents
+      - name: Debug Artifacts Directory
+        if: always()
         run: |
-          echo "Listing workspace contents..."
-          ls -R
+          echo "Artifacts Path: ${{ matrix.testMode }}-artifacts"
+          ls ${{ matrix.testMode }}-artifacts || echo "No artifacts found"
 
       - name: Upload Test Results
         uses: actions/upload-artifact@v3
@@ -99,6 +100,7 @@ jobs:
         run: |
           echo "Artifacts Path: ${{ matrix.testMode }}-artifacts"
           echo "Coverage Path: ${{ steps.tests.outputs.coveragePath }}"
+
   build:
     name: Build Unity project
     runs-on: ubuntu-latest
@@ -125,6 +127,10 @@ jobs:
           UNITY_EMAIL: ${{ secrets.UNITY_EMAIL }}
           UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD }}
         with:
-          projectPath: './dist/'
+          projectPath: dist
           targetPlatform: StandaloneWindows64
-    
+
+      - name: Debug Build Directory
+        run: |
+          echo "Build Path: dist"
+          ls dist || echo "No build artifacts found"
