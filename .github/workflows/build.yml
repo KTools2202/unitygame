@@ -25,10 +25,11 @@ on:
 
 permissions:
   actions: write
+  contents: write
 
 jobs:
   test:
-    name: Test in ${{ matrix.testMode }}
+    name: Test in ${{ matrix.testMode }} for ${{ matrix.os }}
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
@@ -80,27 +81,27 @@ jobs:
       - name: Debug Artifacts Directory
         if: always()
         run: |
-          echo "Artifacts Path: ${{ matrix.testMode }}-artifacts"
+          echo "${{ matrix.os }} Artifacts Path: ${{ matrix.testMode }}-artifacts"
           ls ${{ matrix.testMode }}-artifacts || echo "No artifacts found"
 
       - name: Upload Test Results
         uses: actions/upload-artifact@v4
         if: always()
         with:
-          name: Test results for ${{ matrix.testMode }}
+          name: Test results for ${{ matrix.testMode }} in ${{ matrix.os }}
           path: ${{ matrix.testMode }}-artifacts
 
       - name: Upload Coverage Results
         uses: actions/upload-artifact@v4
         if: always()
         with:
-          name: Coverage results for ${{ matrix.testMode }}
+          name: Coverage results for ${{ matrix.testMode }} in ${{ matrix.os }}
           path: ${{ steps.tests.outputs.coveragePath }}
 
       - name: Debug Step Outputs
         if: always()
         run: |
-          echo "Artifacts Path: ${{ matrix.testMode }}-artifacts"
+          echo "${{ matrix.os }} Artifacts Path: ${{ matrix.testMode }}-artifacts"
           echo "Coverage Path: ${{ steps.tests.outputs.coveragePath }}"
 
   build:
