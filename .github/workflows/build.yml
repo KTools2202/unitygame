@@ -101,8 +101,8 @@ jobs:
       - name: Debug Step Outputs
         if: always()
         run: |
-          echo "${{ matrix.os }} Artifacts Path: ${{ matrix.testMode }}-artifacts"
-          echo "Coverage Path: ${{ steps.tests.outputs.coveragePath }}"
+          echo "${{ matrix.os }} Artifacts Path: ${{ steps.tests.outputs.artifactsPath }}"
+          echo "${{ matrix.os }} Coverage Path: ${{ steps.tests.outputs.coveragePath }}"
 
   build:
     name: Build Unity project
