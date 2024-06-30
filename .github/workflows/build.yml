@@ -39,6 +39,9 @@ jobs:
           - playmode
           - editmode
           - standalone
+        os:
+          - StandaloneWindows
+          - StandaloneWindows64
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v4
@@ -81,14 +84,14 @@ jobs:
           ls ${{ matrix.testMode }}-artifacts || echo "No artifacts found"
 
       - name: Upload Test Results
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         if: always()
         with:
           name: Test results for ${{ matrix.testMode }}
           path: ${{ matrix.testMode }}-artifacts
 
       - name: Upload Coverage Results
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         if: always()
         with:
           name: Coverage results for ${{ matrix.testMode }}
@@ -127,9 +130,15 @@ jobs:
           UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD }}
         with:
           projectPath: dist
-          targetPlatform: StandaloneWindows64
+          targetPlatform: ${{ matrix.os }}
 
       - name: Debug Build Directory
         run: |
           echo "Build Path: ${{ matrix.projectPath }}"
           ls ${{ matrix.projectPath }} || echo "No build artifacts found"
+
+      - name: Upload Build Artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: build-${{ matrix.os }}
+          path: dist/Builds
