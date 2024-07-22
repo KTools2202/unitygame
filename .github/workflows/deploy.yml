@@ -1,7 +1,7 @@
 # Simple workflow for deploying static content to GitHub Pages
 name: Deploy static content to Pages
 
-run-name: Deploy HTML to GitHub Pages (for testing!)
+run-name: Deploy webpage to /unitygame
 
 on:
   # Runs on pushes targeting the specific branch
