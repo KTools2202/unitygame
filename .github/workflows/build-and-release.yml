@@ -1,0 +1,51 @@
+name: Build & release Unreal Engine project
+
+on:
+  push:
+    tags:
+      - "*"
+      
+jobs:
+  build:
+    name: Build project
+    runs-on: windows-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Build project
+        uses: OrchidIsle/UE5-Build-Project@0.3.0
+        with:
+    # Path to RunUAT.bat
+          RUNUAT_PATH: 
+    # Path to the .uproject file
+          UPROJECT_PATH: 
+    # Configuration to use
+          BUILD_CONFIG: Shipping # default is Development
+    # Platform to build for
+          PLATFORM: Windows
+    # Whether to clean
+          CLEAN: false # optional, default is false
+    # Whether to cook
+          COOK: true # optional, default is true
+    # Whether to stage
+          STAGE: true # optional, default is true
+    # Whether to package
+          PACKAGE: false # optional, default is false
+    # Whether to pak files
+          PAK: false # optional, default is false
+    # Whether to include the server
+          SERVER: false # optional, default is false
+    # Whether to archive
+          ARCHIVE: false # optional, default is false
+    # Whether to execute commands without video output
+          NULLRHI: false # optional, default is false
+    # Whether to compile the editor as well
+          EDITOR: false # optional, default is true
+    # Encrypt INI Files
+          ENCRYPT_INI: false # optional, default is false
+    # Delete PDB (debug) files
+          DELETE_PDB: false # optional, default is false
+    # Enable anticheat
+          ANTICHEAT_ENABLED: false # optional, default is false
+        
